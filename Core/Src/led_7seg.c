@@ -9,8 +9,6 @@
 #define SEG_OFF 0
 #define SEG_ON 1
 
-#define LED_OFF 1
-#define LED_ON 0
 
 static int led_7seg_index = 0;
 
@@ -33,13 +31,13 @@ uint8_t numArray[10] = {
 	0x4F, // 3: a b c d     g
 	0x66, // 4:   b c     f g
 	0x6D, // 5: a   c d   f g
-	0x7D, // 6: a   c d e f gled
+	0x7D, // 6: a   c d e f g
 	0x07, // 7: a b c
 	0x7F, // 8: a b c d e f g
 	0x6F  // 9: a b c d   f g
 };
 
-void led_7_seg_scan() {
+void led_7_seg_scan() { //scan every 250 ms
 	if (led_7seg_index == 0) {
 		HAL_GPIO_WritePin(way1_digit1_port, way1_digit1_pin, LED_OFF);
 		HAL_GPIO_WritePin(way2_digit1_port, way2_digit1_pin, LED_OFF);
@@ -86,12 +84,13 @@ void led_7_seg_set(int counter_way1, int counter_way2) {
 	led7seg[3] = counter_way2 / 10;
 }
 
-void led_7_seg_turn_off() {
+void led_7_seg_turn_off_all() {
 	HAL_GPIO_WritePin(way1_digit1_port, way1_digit1_pin, LED_OFF);
 	HAL_GPIO_WritePin(way2_digit1_port, way2_digit1_pin, LED_OFF);
 	HAL_GPIO_WritePin(way1_digit0_port, way1_digit0_pin, LED_OFF);
 	HAL_GPIO_WritePin(way2_digit0_port, way2_digit0_pin, LED_OFF);
 }
+
 
 
 

@@ -22,7 +22,14 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "global.h"
+#include "led_7seg.h"
+#include "software_timer.h"
+#include "fsm_auto.h"
+#include "fsm_manual.h"
+#include "fsm_config.h"
+#include "traffic_light.h"
+#include "button.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -51,7 +58,7 @@ void SystemClock_Config(void);
 static void MX_TIM2_Init(void);
 static void MX_GPIO_Init(void);
 /* USER CODE BEGIN PFP */
-
+void init_system();
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -89,13 +96,23 @@ int main(void)
   MX_TIM2_Init();
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
-
+  init_system();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  fsm_auto_run();
+	  fsm_manual_run();
+	  fsm_config_run();
+	  if (timer_is_expired(TIMER_LED_7_SEG_SCAN)) {
+		  led_7_seg_scan();
+		  timer_set(TIMER_LED_7_SEG_SCAN, TIME_LED_7_SEG_SCAN);
+	  }
+//	  if (is_long_pressed(&button_1)) {
+//		  HAL_GPIO_TogglePin(TEST_LED_GPIO_Port, TEST_LED_Pin); //for debug
+//	  }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -198,8 +215,9 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, tsst_Pin|RED_WAY_1_Pin|GREEN_WAY_1_Pin|AMBER_WAY_1_Pin
-                          |RED_WAY_2_Pin|GREEN_WAY_2_Pin|AMBER_WAY_2_Pin|SEG0_WAY2_Pin
-                          |SEG1_WAY2_Pin|SEG2_WAY2_Pin|SEG3_WAY2_Pin|SEG4_WAY2_Pin, GPIO_PIN_RESET);
+                          |TEST_LED_Pin|RED_WAY_2_Pin|GREEN_WAY_2_Pin|AMBER_WAY_2_Pin
+                          |SEG0_WAY2_Pin|SEG1_WAY2_Pin|SEG2_WAY2_Pin|SEG3_WAY2_Pin
+                          |SEG4_WAY2_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, EN2_Pin|EN3_Pin|SEG3_WAY1_Pin|SEG4_WAY1_Pin
@@ -208,18 +226,20 @@ static void MX_GPIO_Init(void)
                           |EN1_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pins : tsst_Pin RED_WAY_1_Pin GREEN_WAY_1_Pin AMBER_WAY_1_Pin
-                           RED_WAY_2_Pin GREEN_WAY_2_Pin AMBER_WAY_2_Pin SEG0_WAY2_Pin
-                           SEG1_WAY2_Pin SEG2_WAY2_Pin SEG3_WAY2_Pin SEG4_WAY2_Pin */
+                           TEST_LED_Pin RED_WAY_2_Pin GREEN_WAY_2_Pin AMBER_WAY_2_Pin
+                           SEG0_WAY2_Pin SEG1_WAY2_Pin SEG2_WAY2_Pin SEG3_WAY2_Pin
+                           SEG4_WAY2_Pin */
   GPIO_InitStruct.Pin = tsst_Pin|RED_WAY_1_Pin|GREEN_WAY_1_Pin|AMBER_WAY_1_Pin
-                          |RED_WAY_2_Pin|GREEN_WAY_2_Pin|AMBER_WAY_2_Pin|SEG0_WAY2_Pin
-                          |SEG1_WAY2_Pin|SEG2_WAY2_Pin|SEG3_WAY2_Pin|SEG4_WAY2_Pin;
+                          |TEST_LED_Pin|RED_WAY_2_Pin|GREEN_WAY_2_Pin|AMBER_WAY_2_Pin
+                          |SEG0_WAY2_Pin|SEG1_WAY2_Pin|SEG2_WAY2_Pin|SEG3_WAY2_Pin
+                          |SEG4_WAY2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : BTN0_Pin BTN1_Pin BTN2_Pin */
-  GPIO_InitStruct.Pin = BTN0_Pin|BTN1_Pin|BTN2_Pin;
+  /*Configure GPIO pins : BTN1_Pin BTN2_Pin BTN3_Pin */
+  GPIO_InitStruct.Pin = BTN1_Pin|BTN2_Pin|BTN3_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
@@ -240,6 +260,20 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+void init_system() {
+	timer_set(TIMER_LED_7_SEG_SCAN, TIME_LED_7_SEG_SCAN);
+	led_7_seg_set(red_time_s, green_time_s);
+	HAL_TIM_Base_Start_IT(&htim2);
+}
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
+	if (htim->Instance == TIM2) {              // <- thêm dòng này
+		get_key_input(&button_1);
+		get_key_input(&button_2);
+		get_key_input(&button_3);
+		timer_run();
+	}
+}
 
 /* USER CODE END 4 */
 

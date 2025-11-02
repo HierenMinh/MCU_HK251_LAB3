@@ -9,15 +9,16 @@
 #define INC_SOFTWARE_TIMER_H_
 
 #include "global.h"
+#include "main.h"
 
 typedef struct {
-	uint8_t timer_counter;
+	uint32_t timer_counter;
 	uint8_t timer_flag;
 } sw_timer_t;
 
 void timer_run();
-void timer_set(int flag_timer, int duration);
-uint8_t timer_is_expired(int timer_idx);
+void timer_set(uint8_t flag_timer, uint32_t duration);
+uint8_t timer_is_expired(uint8_t timer_idx);
 
 
 

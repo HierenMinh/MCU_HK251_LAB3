@@ -1,0 +1,5 @@
+button.c:54:6:get_key_input	16	static
+button.c:79:9:is_pressed	16	static
+button.c:86:6:clear_press	16	static
+button.c:89:9:is_long_pressed	16	static
+button.c:96:6:clear_long_press	16	static

@@ -7,9 +7,9 @@
 
 #include "software_timer.h"
 
-static sw_timer_t sw_timers[TIMER_COUNT];
+static sw_timer_t sw_timers[TIMER_NUM];
 
-void timer_set(uint8_t index, uint8_t duration) {
+void timer_set(uint8_t index, uint32_t duration) {
 	sw_timers[index].timer_flag = 0;
 	sw_timers[index].timer_counter = duration / TIME_CYCLE; // 10ms -> 1ms
 }

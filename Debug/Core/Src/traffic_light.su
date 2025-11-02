@@ -1,0 +1,15 @@
+traffic_light.c:12:6:red_green_display	8	static
+traffic_light.c:22:6:green_red_display	8	static
+traffic_light.c:32:6:amber_red_display	8	static
+traffic_light.c:43:6:red_amber_display	8	static
+traffic_light.c:54:6:traffic_light_turn_off_all	8	static
+traffic_light.c:63:6:traffic_light_turn_on_all	8	static
+traffic_light.c:71:6:traffic_light_blink_amber	8	static
+traffic_light.c:75:6:traffic_light_blink_green	8	static
+traffic_light.c:79:6:traffic_light_blink_red	8	static
+traffic_light.c:84:6:traffic_light_turn_on_red	8	static
+traffic_light.c:95:6:traffic_light_turn_on_amber	8	static
+traffic_light.c:106:6:traffic_light_turn_on_green	8	static
+traffic_light.c:116:6:traffic_light_blink_red_init	8	static
+traffic_light.c:126:6:traffic_light_blink_green_init	8	static
+traffic_light.c:136:6:traffic_light_blink_amber_init	8	static
