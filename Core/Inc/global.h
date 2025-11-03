@@ -42,7 +42,8 @@ typedef enum {
 	CONF_GREEN,
 	CONF_GREEN_LATCH,
 	CONF_RED,
-	CONF_RED_LATCH
+	CONF_RED_LATCH,
+	CONF_ALL_LATCH
 } config_state_t;
 
 #define TIME_CYCLE 10

@@ -134,19 +134,7 @@ void fsm_config_run() {
 		led_7_seg_set(tmp_amber_time_s, tmp_amber_time_s);
 		if (is_pressed(&button_1)) {
 			clear_press(&button_1);
-			traffic_light_turn_on_all();
-			if((tmp_red_time_s > tmp_green_time_s) && (tmp_red_time_s - tmp_green_time_s == tmp_amber_time_s)) {
-				red_time_s = tmp_red_time_s;
-				red_time_ms = red_time_s * 1000;
-
-				green_time_s = tmp_green_time_s;
-				green_time_ms = green_time_s * 1000;
-
-				amber_time_s = tmp_amber_time_s;
-				amber_time_ms = amber_time_s * 1000;
-
-
-			}
+			config_status = CONF_ALL_LATCH;
 			// else do not change anything
 //			config_status = CONF_IDLE;
 //			auto_status = AUTO_INIT;
@@ -157,6 +145,21 @@ void fsm_config_run() {
 			timer_set(TIMER_LED_BLINK, TIME_LED_BLINK_MS);
 			traffic_light_blink_amber_init();
 			config_status = CONF_AMBER;
+		}
+
+	case CONF_ALL_LATCH:
+		traffic_light_turn_on_all();
+		if((tmp_red_time_s > tmp_green_time_s) && (tmp_red_time_s - tmp_green_time_s == tmp_amber_time_s)) {
+			red_time_s = tmp_red_time_s;
+			red_time_ms = red_time_s * 1000;
+
+			green_time_s = tmp_green_time_s;
+			green_time_ms = green_time_s * 1000;
+
+			amber_time_s = tmp_amber_time_s;
+			amber_time_ms = amber_time_s * 1000;
+		} else {
+			led_7_seg_set(amber_time_s, amber_time_s);
 		}
 		if (is_long_pressed(&button_2)) {
 			clear_long_press(&button_2);
